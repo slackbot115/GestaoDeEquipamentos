@@ -318,8 +318,20 @@ namespace GestaoDeEquipamentos.ConsoleApp
         static void CriarEquipamento(ref int indexArrayGeral)
         {
             Console.WriteLine("Criando um equipamento: ");
-            Console.Write("Digite o nome do equipamento: ");
-            nomeEquipamento[indexArrayGeral] = Console.ReadLine();
+            while (true)
+            {
+                Console.Write("Digite o nome do equipamento: ");
+                nomeEquipamento[indexArrayGeral] = Console.ReadLine();
+                if (nomeEquipamento[indexArrayGeral].Length < 6)
+                {
+                    Console.WriteLine("Não é possível inserir um nome com menos que 6 caracteres, insira novamente...\n");
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             Console.Write("Digite o preço do equipamento: ");
             precoEquipamento[indexArrayGeral] = double.Parse(Console.ReadLine());
