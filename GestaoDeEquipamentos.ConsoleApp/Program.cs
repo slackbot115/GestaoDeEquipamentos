@@ -16,6 +16,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
         static DateTime[] dataFabricacaoEquipamento = new DateTime[1000];
         static string[] fabricanteEquipamento = new string[1000];
         static bool[] estaEmUmChamado = new bool[1000];
+        static int[] numChamados = new int[1000];
 
         // Variáveis para chamados
         static string[] tituloChamado = new string[1000];
@@ -49,7 +50,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
                 }
                 else if (opcao == 1)
                 {
-                    Console.WriteLine("1 - Criar equipamento\n2 - Listar equipamentos\n3 - Editar equipamento\n4 - Excluir equipamento\n0 - Voltar");
+                    Console.WriteLine("1 - Criar equipamento\n2 - Listar equipamentos\n3 - Editar equipamento\n4 - Excluir equipamento\n5 - Listagem de equipamentos problemáticos\n0 - Voltar");
                     Console.Write("Opção: ");
                     int menuOpcao = int.Parse(Console.ReadLine());
                     switch (menuOpcao)
@@ -79,6 +80,11 @@ namespace GestaoDeEquipamentos.ConsoleApp
                             ExcluirEquipamentos(ref indexArrayGeralEquipamentos);
                             MensagemDeSucesso("\nExclusão de Equipamento concluída...");
                             break;
+                        case 5:
+                            Console.Clear();
+                            ListarEquipamentosProblematicos();
+                            MensagemDeSucesso("\nListagem de Equipamentos problemáticos concluída...");
+                            break;
                         default:
                             Console.WriteLine("Opção inválida...");
                             break;
@@ -86,7 +92,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
                 }
                 else if (opcao == 2)
                 {
-                    Console.WriteLine("1 - Criar chamado\n2 - Listar chamados\n3 - Editar chamado\n4 - Excluir chamado\n5 - Editar equipamento em um chamado\n0 - Voltar");
+                    Console.WriteLine("1 - Criar chamado\n2 - Listar chamados\n3 - Editar chamado\n4 - Excluir chamado\n5 - Editar equipamento em um chamado\n6 - Alterar status do chamado\n0 - Voltar");
                     Console.Write("Opção: ");
                     int menuOpcao = int.Parse(Console.ReadLine());
 
@@ -134,7 +140,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
                 }
                 else if (opcao == 3)
                 {
-                    Console.WriteLine("1 - Criar solicitante\n2 - Listar solicitantes\n3 - Editar solicitante\n4 - Excluir solicitante\n5 - Adicionar solicitante em um chamado\n6 - Editar solicitante em um chamado\n0 - Voltar");
+                    Console.WriteLine("1 - Criar solicitante\n2 - Listar solicitantes\n3 - Editar solicitante\n4 - Excluir solicitante\n5 - Editar solicitante em um chamado\n0 - Voltar");
                     Console.Write("Opção: ");
                     int menuOpcao = int.Parse(Console.ReadLine());
 
@@ -166,11 +172,6 @@ namespace GestaoDeEquipamentos.ConsoleApp
                             MensagemDeSucesso("\nExclusão de Solicitante concluída...");
                             break;
                         case 5:
-                            Console.Clear();
-                            AdicionarSolicitanteEmChamado();
-                            MensagemDeSucesso("\nSolicitante adicionado com sucesso...");
-                            break;
-                        case 6:
                             Console.Clear();
                             EditarSolicitanteEmChamado();
                             MensagemDeSucesso("\nSolicitante editado com sucesso...");
@@ -377,44 +378,6 @@ namespace GestaoDeEquipamentos.ConsoleApp
             }
         }
 
-        static void AdicionarSolicitanteEmChamado()
-        {
-            if (VerificarExistenciaChamados())
-            {
-                int indiceParaEditarChamado = ListarElementosReceberIndiceChamados();
-                if (indiceParaEditarChamado != -1)
-                {
-                    if (temUmSolicitante[indiceParaEditarChamado] == false)
-                    {
-                        Console.WriteLine("\nAdicionando solicitante ao chamado...");
-                        int indiceParaReceberSolicitante = ListarElementosReceberIndiceSolicitantes();
-                        if (indiceParaReceberSolicitante != -1)
-                        {
-                            // Atribuindo solicitante aos indices necessários
-                            indiceSolicitante[indiceParaEditarChamado] = indiceParaReceberSolicitante;
-                            temUmSolicitante[indiceParaEditarChamado] = true;
-                        }
-                        else
-                        {
-                            MensagemDeErro("Sem solicitantes para adicionar em um chamado...");
-                        }
-                    }
-                    else
-                    {
-                        MensagemDeErro("Este chamado já possui um solicitante...");
-                    }
-                }
-                else
-                {
-                    MensagemDeErro("Sem solicitantes para adicionar em um chamado...");
-                }
-            }
-            else
-            {
-                MensagemDeErro("Sem chamados para adicionar um solicitante...");
-            }
-        }
-
         static void ExcluirChamado(ref int indexArrayGeral)
         {
             Console.WriteLine("Escolha um índice para realizar a exclusão: ");
@@ -501,7 +464,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
                         Console.ForegroundColor = ConsoleColor.Green;
                         if (temUmSolicitante[i] != false)
                         {
-                            Console.WriteLine("Índice: " + i);
+                            Console.WriteLine("\nÍndice: " + i);
                             Console.WriteLine($"Título do chamado: {tituloChamado[i]}");
                             Console.WriteLine($"Equipamento: {nomeEquipamento[indiceEquipamento[i]]}");
                             Console.WriteLine($"Nº de dias que o chamado está aberto: {(diaAtual - dataAberturaEquipamento[i]).TotalDays}");
@@ -509,7 +472,7 @@ namespace GestaoDeEquipamentos.ConsoleApp
                         }
                         else
                         {
-                            Console.WriteLine("Índice: " + i);
+                            Console.WriteLine("\nÍndice: " + i);
                             Console.WriteLine($"Título do chamado: {tituloChamado[i]}");
                             Console.WriteLine($"Equipamento: {nomeEquipamento[indiceEquipamento[i]]}");
                             Console.WriteLine($"Nº de dias que o chamado está aberto: {(diaAtual - dataAberturaEquipamento[i]).TotalDays}");
@@ -548,31 +511,51 @@ namespace GestaoDeEquipamentos.ConsoleApp
         {
             if (VerificarExistenciaEquipamentos())
             {
-                int indiceParaInserirEquipamento = ListarElementosReceberIndiceEquipamentos();
-                if (indiceParaInserirEquipamento != -1)
+                if (VerificarExistenciaSolicitantes())
                 {
-                    Console.WriteLine("\nCriando chamado:");
-                    Console.Write("Digite o título do chamado: ");
-                    tituloChamado[indexArrayGeralChamados] = Console.ReadLine();
+                    int indiceParaInserirEquipamento = ListarElementosReceberIndiceEquipamentos();
+                    if (indiceParaInserirEquipamento != -1)
+                    {
+                        int indiceParaInserirSolicitante = ListarElementosReceberIndiceSolicitantes();
+                        if(indiceParaInserirSolicitante != -1)
+                        {
+                            Console.WriteLine("\nCriando chamado:");
+                            Console.Write("Digite o título do chamado: ");
+                            tituloChamado[indexArrayGeralChamados] = Console.ReadLine();
 
-                    Console.Write("Digite a descrição do chamado: ");
-                    descricaoChamado[indexArrayGeralChamados] = Console.ReadLine();
+                            Console.Write("Digite a descrição do chamado: ");
+                            descricaoChamado[indexArrayGeralChamados] = Console.ReadLine();
 
-                    // Atribuindo equipamento aos indices necessários
-                    indiceEquipamento[indexArrayGeralChamados] = indiceParaInserirEquipamento;
-                    estaEmUmChamado[indiceParaInserirEquipamento] = true;
+                            // Atribuindo equipamento aos indices necessários
+                            indiceEquipamento[indexArrayGeralChamados] = indiceParaInserirEquipamento;
+                            estaEmUmChamado[indiceParaInserirEquipamento] = true;
+                            numChamados[indiceParaInserirEquipamento]++;
 
-                    Console.Write("Digite a data de abertura do chamado (Dia/Mês/Ano): ");
-                    dataAberturaEquipamento[indexArrayGeralChamados] = DateTime.Parse(Console.ReadLine());
+                            indiceSolicitante[indexArrayGeralChamados] = indiceParaInserirSolicitante;
+                            temUmSolicitante[indexArrayGeralChamados] = true;
 
-                    estaAberto[indexArrayGeralChamados] = true;
+                            Console.Write("Digite a data de abertura do chamado (Dia/Mês/Ano): ");
+                            dataAberturaEquipamento[indexArrayGeralChamados] = DateTime.Parse(Console.ReadLine());
 
-                    indexArrayGeralChamados++;
+                            estaAberto[indexArrayGeralChamados] = true;
+
+                            indexArrayGeralChamados++;
+                        }
+                        else
+                        {
+                            MensagemDeErro("Sem solicitantes para criar um chamado...");
+                        }
+                    }
+                    else
+                    {
+                        MensagemDeErro("Sem equipamentos para criar um chamado...");
+                    }
                 }
                 else
                 {
-                    MensagemDeErro("Sem equipamentos para criar um chamado...");
+                    MensagemDeErro("Sem solicitantes para criar um chamado...");
                 }
+                
             }
             else
             {
@@ -584,6 +567,28 @@ namespace GestaoDeEquipamentos.ConsoleApp
         #endregion
 
         #region CRUD Equipamentos
+
+        static void ListarEquipamentosProblematicos()
+        {
+            if (VerificarExistenciaEquipamentos())
+            {
+                Console.WriteLine("Listando equipamentos que mais apresentaram problemas em ordem decrescente: ");
+                Array.Sort(numChamados);
+                Array.Reverse(numChamados);
+                for (int i = 0; i < indexArrayGeralEquipamentos; i++)
+                {
+                    if (numChamados[i] != 0)
+                    {
+                        Console.WriteLine($"\nEquipamento: {nomeEquipamento[i]}");
+                        Console.WriteLine($"Quantidade de chamados: {numChamados[i]}");
+                    }
+                }
+            }
+            else
+            {
+                MensagemDeErro("Sem equipamentos para listar...");
+            }   
+        }
 
         // Anulando todos os valores do índice desejado
         static void ExcluirEquipamentos(ref int indexArrayGeral)
